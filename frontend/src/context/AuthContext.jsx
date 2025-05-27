@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import * as jwtDecode from "jwt-decode"; 
+import {jwtDecode} from "jwt-decode";
 import api from "../services/api";
 
 const AuthContext = createContext();
@@ -38,6 +38,7 @@ export const AuthProvider = ({ children }) => {
       await api.post("/register", { username, password });
       // Automatically log in after registration
       await login(username, password);
+      navigate("/"); // Redirect to home after registration
     } catch (error) {
       throw (
         error.response?.data?.message ||

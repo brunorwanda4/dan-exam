@@ -55,7 +55,7 @@ const Register = () => {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="input input-bordered"
+                className="input input-bordered w-full"
                 required
                 autoFocus
               />
@@ -69,7 +69,7 @@ const Register = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="input input-bordered"
+                className="input input-bordered w-full"
                 required
               />
             </div>
@@ -82,7 +82,7 @@ const Register = () => {
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="input input-bordered"
+                className="input input-bordered w-full"
                 required
               />
             </div>
@@ -90,7 +90,7 @@ const Register = () => {
             <div className="form-control mt-6">
               <button 
                 type="submit" 
-                className={`btn btn-primary ${loading ? 'loading' : ''}`}
+                className={`btn btn-primary w-full ${loading ? 'loading' : ''}`}
                 disabled={loading}
               >
                 {loading ? 'Registering...' : 'Register'}

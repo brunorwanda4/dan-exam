@@ -33,7 +33,7 @@ const MonthlyPayroll = () => {
       <div className="card-body">
         <h2 className="card-title">Monthly Payroll Report</h2>
         
-        <div className="form-control w-full max-w-xs mb-4">
+        <div className="space-y-2 flex flex-col w-full max-w-xs mb-4">
           <label className="label">
             <span className="label-text">Select Month</span>
           </label>

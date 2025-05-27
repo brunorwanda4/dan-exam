@@ -1,181 +1,207 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../../services/api';
+import EmployeeForm from './EmployeeForm';
+import {
+  PencilSquareIcon,
+  TrashIcon,
+  PlusIcon,
+  ArrowPathIcon,
+  EyeIcon
+} from '@heroicons/react/24/outline';
 
-const EmployeeForm = ({ employee, departments, onSuccess, onCancel }) => {
-  const [formData, setFormData] = useState(
-    employee || {
-      employeeNumber: '',
-      firstName: '',
-      lastName: '',
-      position: '',
-      address: '',
-      telephone: '',
-      departmentId: ''
-    }
-  );
+const EmployeeList = () => {
+  const [employees, setEmployees] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [currentEmployee, setCurrentEmployee] = useState(null);
 
-  useEffect(() => {
-    if (employee) {
-      setFormData(employee);
-    }
-  }, [employee]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-
+  const fetchEmployees = async () => {
     try {
-      if (employee) {
-        // Update existing employee
-        await api.put(`/employees/${employee.id}`, formData);
-      } else {
-        // Create new employee
-        await api.post('/employees', formData);
-      }
-      onSuccess();
+      setLoading(true);
+      setError('');
+      const response = await api.get('/employees');
+      setEmployees(response.data);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to save employee');
+      setError(err.response?.data?.message || 'Failed to fetch employees');
     } finally {
       setLoading(false);
     }
   };
 
+  const fetchDepartments = async () => {
+    try {
+      const response = await api.get('/departments');
+      setDepartments(response.data);
+    } catch (err) {
+      console.error('Failed to fetch departments:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployees();
+    fetchDepartments();
+  }, []);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this employee?')) {
+      return;
+    }
+    try {
+      await api.delete(`/employees/${id}`);
+      fetchEmployees();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to delete employee');
+    }
+  };
+
+  const handleEdit = (employee) => {
+    setCurrentEmployee(employee);
+    setShowForm(true);
+  };
+
+  const handleFormSuccess = () => {
+    setShowForm(false);
+    setCurrentEmployee(null);
+    fetchEmployees();
+  };
+
+  const getDepartmentName = (departmentId) => {
+    const department = departments.find(d => d.id === departmentId);
+    return department ? department.departmentName : 'N/A';
+  };
+
   return (
-    <div className="card bg-base-100 shadow-lg mb-6">
-      <div className="card-body">
-        <h2 className="card-title">
-          {employee ? 'Edit Employee' : 'Add New Employee'}
-        </h2>
-        {error && <div className="alert alert-error">{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Employee Number</span>
-              </label>
-              <input
-                type="text"
-                name="employeeNumber"
-                value={formData.employeeNumber}
-                onChange={handleChange}
-                className="input input-bordered"
-                required
-              />
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">First Name</span>
-              </label>
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                className="input input-bordered"
-                required
-              />
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Last Name</span>
-              </label>
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                className="input input-bordered"
-                required
-              />
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Position</span>
-              </label>
-              <input
-                type="text"
-                name="position"
-                value={formData.position}
-                onChange={handleChange}
-                className="input input-bordered"
-                required
-              />
-            </div>
-            <div className="form-control md:col-span-2">
-              <label className="label">
-                <span className="label-text">Address</span>
-              </label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                className="input input-bordered"
-                required
-              />
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Telephone</span>
-              </label>
-              <input
-                type="text"
-                name="telephone"
-                value={formData.telephone}
-                onChange={handleChange}
-                className="input input-bordered"
-                required
-              />
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Department</span>
-              </label>
-              <select
-                name="departmentId"
-                value={formData.departmentId}
-                onChange={handleChange}
-                className="select select-bordered"
-                required
-              >
-                <option value="">Select Department</option>
-                {departments.map((dept) => (
-                  <option key={dept.id} value={dept.id}>
-                    {dept.departmentName}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className="card-actions justify-end mt-4">
-            <button
-              type="button"
-              onClick={onCancel}
-              className="btn btn-ghost"
-              disabled={loading}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className={`btn btn-primary ${loading ? 'loading' : ''}`}
-              disabled={loading}
-            >
-              {employee ? 'Update' : 'Save'}
-            </button>
-          </div>
-        </form>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Employees</h1>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => fetchEmployees()}
+            className="btn btn-outline btn-sm"
+            disabled={loading}
+          >
+            <ArrowPathIcon className="h-4 w-4" />
+            Refresh
+          </button>
+          <button
+            onClick={() => {
+              setCurrentEmployee(null);
+              setShowForm(true);
+            }}
+            className="btn btn-primary btn-sm"
+          >
+            <PlusIcon className="h-4 w-4" />
+            Add Employee
+          </button>
+        </div>
       </div>
+
+      {error && (
+        <div className="alert alert-error shadow-lg">
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current flex-shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{error}</span>
+          </div>
+        </div>
+      )}
+
+      {showForm && (
+        <EmployeeForm
+          employee={currentEmployee}
+          departments={departments}
+          onSuccess={handleFormSuccess}
+          onCancel={() => {
+            setShowForm(false);
+            setCurrentEmployee(null);
+          }}
+        />
+      )}
+
+      {loading ? (
+        <div className="flex justify-center">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="table table-zebra w-full">
+            <thead>
+              <tr>
+                <th>Employee #</th>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Department</th>
+                <th>Hired Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {employees.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="text-center py-4">
+                    No employees found
+                  </td>
+                </tr>
+              ) : (
+                employees.map((employee) => (
+                  <tr key={employee.id}>
+                    <td>{employee.employeeNumber}</td>
+                    <td>
+                      {employee.firstName} {employee.lastName}
+                    </td>
+                    <td>{employee.position}</td>
+                    <td>{getDepartmentName(employee.departmentId)}</td>
+                    <td>
+                      {new Date(employee.hiredDate).toLocaleDateString()}
+                    </td>
+                    <td>
+                      <div className="flex space-x-2">
+                        <Link
+                          to={`/employees/${employee.id}`}
+                          className="btn btn-ghost btn-xs"
+                        >
+                          <EyeIcon className="h-4 w-4" />
+                          View
+                        </Link>
+                        <button
+                          onClick={() => handleEdit(employee)}
+                          className="btn btn-ghost btn-xs"
+                        >
+                          <PencilSquareIcon className="h-4 w-4" />
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(employee.id)}
+                          className="btn btn-ghost btn-xs text-error"
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
 
-export default EmployeeForm;
+export default EmployeeList;

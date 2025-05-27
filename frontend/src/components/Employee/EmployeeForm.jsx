@@ -58,7 +58,7 @@ const EmployeeForm = ({ onSuccess }) => {
         {error && <div className="alert alert-error">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="form-control">
+            <div className="space-y-2 flex flex-col">
               <label className="label">
                 <span className="label-text">Employee Number</span>
               </label>
@@ -67,11 +67,11 @@ const EmployeeForm = ({ onSuccess }) => {
                 name="employeeNumber"
                 value={formData.employeeNumber}
                 onChange={handleChange}
-                className="input input-bordered"
+                className="input input-bordered w-full"
                 required
               />
             </div>
-            <div className="form-control">
+            <div className="space-y-2 flex flex-col">
               <label className="label">
                 <span className="label-text">First Name</span>
               </label>
@@ -80,11 +80,11 @@ const EmployeeForm = ({ onSuccess }) => {
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                className="input input-bordered"
+                className="input input-bordered w-full"
                 required
               />
             </div>
-            <div className="form-control">
+            <div className="space-y-2 flex flex-col">
               <label className="label">
                 <span className="label-text">Last Name</span>
               </label>
@@ -93,11 +93,11 @@ const EmployeeForm = ({ onSuccess }) => {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                className="input input-bordered"
+                className="input input-bordered w-full"
                 required
               />
             </div>
-            <div className="form-control">
+            <div className="space-y-2 flex flex-col">
               <label className="label">
                 <span className="label-text">Position</span>
               </label>
@@ -106,11 +106,11 @@ const EmployeeForm = ({ onSuccess }) => {
                 name="position"
                 value={formData.position}
                 onChange={handleChange}
-                className="input input-bordered"
+                className="input input-bordered w-full"
                 required
               />
             </div>
-            <div className="form-control md:col-span-2">
+            <div className="space-y-2 flex flex-col md:col-span-2">
               <label className="label">
                 <span className="label-text">Address</span>
               </label>
@@ -119,11 +119,11 @@ const EmployeeForm = ({ onSuccess }) => {
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
-                className="input input-bordered"
+                className="input input-bordered w-full"
                 required
               />
             </div>
-            <div className="form-control">
+            <div className="space-y-2 flex flex-col">
               <label className="label">
                 <span className="label-text">Telephone</span>
               </label>
@@ -132,11 +132,11 @@ const EmployeeForm = ({ onSuccess }) => {
                 name="telephone"
                 value={formData.telephone}
                 onChange={handleChange}
-                className="input input-bordered"
+                className="input input-bordered w-full"
                 required
               />
             </div>
-            <div className="form-control">
+            <div className="space-y-2 flex flex-col">
               <label className="label">
                 <span className="label-text">Department</span>
               </label>

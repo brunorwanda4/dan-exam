@@ -47,7 +47,7 @@ const DepartmentForm = ({ department, onSuccess, onCancel }) => {
         {error && <div className="alert alert-error">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="form-control">
+            <div className="space-y-2 flex flex-col">
               <label className="label">
                 <span className="label-text">Department Code</span>
               </label>
@@ -60,7 +60,7 @@ const DepartmentForm = ({ department, onSuccess, onCancel }) => {
                 required
               />
             </div>
-            <div className="form-control">
+            <div className="space-y-2 flex flex-col">
               <label className="label">
                 <span className="label-text">Department Name</span>
               </label>
@@ -73,7 +73,7 @@ const DepartmentForm = ({ department, onSuccess, onCancel }) => {
                 required
               />
             </div>
-            <div className="form-control">
+            <div className="space-y-2 flex flex-col">
               <label className="label">
                 <span className="label-text">Gross Salary</span>
               </label>

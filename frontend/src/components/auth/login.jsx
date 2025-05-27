@@ -18,6 +18,7 @@ const Login = () => {
     try {
       await login(username, password);
       navigate('/');
+      console.log({username, password});
     } catch (err) {
       setError(err);
     } finally {
@@ -42,7 +43,7 @@ const Login = () => {
           )}
 
           <form onSubmit={handleSubmit}>
-            <div className="form-control">
+            <div className="space-y-2 flex flex-col">
               <label className="label">
                 <span className="label-text">Username</span>
               </label>
@@ -50,13 +51,13 @@ const Login = () => {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="input input-bordered"
+                className="input input-bordered w-full"
                 required
                 autoFocus
               />
             </div>
             
-            <div className="form-control mt-4">
+            <div className="space-y-2 flex flex-col mt-4">
               <label className="label">
                 <span className="label-text">Password</span>
               </label>
@@ -64,12 +65,12 @@ const Login = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="input input-bordered"
+                className="input input-bordered w-full"
                 required
               />
             </div>
             
-            <div className="form-control mt-6">
+            <div className="space-y-2 flex flex-col mt-6">
               <button 
                 type="submit" 
                 className={`btn btn-primary ${loading ? 'loading' : ''}`}
