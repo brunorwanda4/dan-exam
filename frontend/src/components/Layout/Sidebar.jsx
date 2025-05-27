@@ -10,10 +10,11 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { useAuth } from "../../context/AuthContext";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+const {logout} = useAuth()
   return (
     <>
       {/* Mobile Toggle Button */}
@@ -88,9 +89,9 @@ const Sidebar = () => {
             </NavLink>
           </li>
           <li>
-            <Link to="/login" className="btn btn-ghost w-full text-error">
+            <button onClick={logout} className="btn btn-ghost w-full text-error">
               Login
-            </Link>
+            </button>
           </li>
         </ul>
       </div>
