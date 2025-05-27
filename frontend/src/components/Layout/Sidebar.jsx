@@ -90,7 +90,7 @@ const {logout} = useAuth()
           </li>
           <li>
             <button onClick={logout} className="btn btn-ghost w-full text-error">
-              Login
+              Logout
             </button>
           </li>
         </ul>
